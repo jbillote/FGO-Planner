@@ -23,16 +23,13 @@ func (s *FGOPlannerAPI) Start(port string) {
 	s.e.Use(middleware.Logger())
 	s.e.Use(middleware.Recover())
 	s.e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{ "*" },
+		// AllowOrigins: []string{ "*" },
 		AllowMethods: []string{ echo.GET },
 	}))
 
 	template.NewTemplateRenderer(s.e, "public/*.html", "public/components/*.html")
 	s.e.GET("/", func(c echo.Context) error {
-		params := map[string]interface{}{
-			"Name": "jbillote",
-		}
-		return c.Render(http.StatusOK, "index", params)
+		return c.Render(http.StatusOK, "index", nil)
 	})
 	s.e.GET("/search", controller.SearchServant)
 

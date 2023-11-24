@@ -1,7 +1,14 @@
 {{define "search_results"}}
-<div class="position-relative">
+<!-- <div class="position-relative">
     <div class="px-5">
         <span id="search-results">{{.servant}}</span>
     </div>
-</div>
+</div> -->
+    <div class="px-5 position-relative">
+        <ul class="list-group " id="search-results">
+            {{range .Results}}
+                {{template "search_result" .}}
+            {{end}}
+        </ul>
+    </div>
 {{end}}
