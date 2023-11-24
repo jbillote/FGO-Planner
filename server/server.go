@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/jbillote/fgo-planner-fullstack/controller"
 	"github.com/jbillote/fgo-planner-fullstack/template"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -33,6 +34,7 @@ func (s *FGOPlannerAPI) Start(port string) {
 		}
 		return c.Render(http.StatusOK, "index", params)
 	})
+	s.e.GET("/search", controller.SearchServant)
 
 	s.e.Logger.Fatal(s.e.Start(":8080"))
 }

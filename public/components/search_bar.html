@@ -1,8 +1,13 @@
 {{define "search_bar"}}
 <div class="d-flex justify-content-center px-5">
     <div class="form-outline" data-mdb-input-init>
-        <input type="text" id="a" class="form-control" />
-        <label class="form-label" for="a">Search</label>
+        <input type="search" id="search" name="query" class="form-control"
+            hx-get="/search" hx-trigger="input changed delay:500ms, search"
+            hx-target="#search-results" />
+        <label class="form-label" for="search">Search</label>
     </div>
+    <!-- <button type="button" class="btn btn-primary" data-mdb-ripple-init hx-get="/search" hx-trigger="click" hx-target="#servant-display" hx-swap="innerHTML">
+        <i class="fas fa-search"></i>
+    </button> -->
 </div>
 {{end}}
