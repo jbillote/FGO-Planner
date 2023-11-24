@@ -18,6 +18,7 @@ func NewServer() *FGOPlannerAPI {
 }
 
 func (s *FGOPlannerAPI) Start(port string) {
+	s.e.Use(middleware.RemoveTrailingSlash())
 	s.e.Use(middleware.Logger())
 	s.e.Use(middleware.Recover())
 	s.e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -25,8 +26,8 @@ func (s *FGOPlannerAPI) Start(port string) {
 		AllowMethods: []string{ echo.GET },
 	}))
 
-	template.NewTemplateRenderer(s.e, "public/*.html")
-	s.e.GET("/hello", func(c echo.Context) error {
+	template.NewTemplateRenderer(s.e, "public/*.html", "public/components/*.html")
+	s.e.GET("/", func(c echo.Context) error {
 		params := map[string]interface{}{
 			"Name": "jbillote",
 		}
