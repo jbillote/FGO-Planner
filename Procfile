@@ -1,1 +1,0 @@
-web: fgo-planner
