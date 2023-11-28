@@ -35,7 +35,7 @@ func (s *FGOPlannerAPI) Start(port string) {
 	v1 := fgo.Group("/v1")
 	v1Routes(v1)
 
-    s.e.Logger.Fatal(s.e.Start(":8080"))
+    s.e.Logger.Fatal(s.e.Start(port))
 }
 
 func v1Routes(e *echo.Group) {
