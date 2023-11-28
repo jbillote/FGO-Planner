@@ -1,2 +1,4 @@
 .idea/
 fgo-planner-fullstack
+/node_modules
+/dist

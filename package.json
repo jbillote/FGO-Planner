@@ -1,0 +1,25 @@
+{
+  "name": "fgo-planner",
+  "version": "1.0.0",
+  "description": "Application for planning what materials are needed for the mobile game\r Fate/Grand Order.",
+  "main": "src/index.ts",
+  "scripts": {
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.2",
+    "webpack": "^5.89.0"
+  },
+  "devDependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbillote/fgo-planner-fullstack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jbillote/fgo-planner-fullstack/issues"
+  },
+  "homepage": "https://github.com/jbillote/fgo-planner-fullstack#readme"
+}
