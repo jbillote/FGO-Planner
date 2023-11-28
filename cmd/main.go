@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/jbillote/fgo-planner/server"
+	"github.com/jbillote/fgo-planner/pkg/server"
 	"os"
 )
 
