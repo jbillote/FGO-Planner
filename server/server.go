@@ -28,12 +28,19 @@ func (s *FGOPlannerAPI) Start(port string) {
 	}))
 
 	template.NewTemplateRenderer(s.e, "public/*.html", "public/components/*.html")
-	s.e.GET("/", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "index", nil)
-	})
-	s.e.GET("/search", controller.SearchServant)
+
+	web := s.e.Group("")
+	webRoutes(web)
 
 	s.e.Logger.Fatal(s.e.Start(":8080"))
+}
+
+func webRoutes(e *echo.Group) {
+	e.GET("/", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "index", nil)
+	})
+	e.GET("/servant/:id", controller.ServantDisplay)
+	e.GET("/search", controller.SearchDisplay)
 }
 
 func (s *FGOPlannerAPI) Close() {

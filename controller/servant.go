@@ -9,7 +9,8 @@ import (
 	"io"
 	"math"
 	"net/http"
-	// "strconv"
+	"sort"
+	"strconv"
 )
 
 type servantResponse struct {
@@ -18,7 +19,7 @@ type servantResponse struct {
     ClassID            int                  `json:"classId"`
     Rarity             int                  `json:"rarity"`
     ExtraAssets        extraAssets          `json:"extraAssets"`
-    // Skills             []model.Skill        `json:"skills"`
+    Skills             []model.Skill        `json:"skills"`
     Appends            []appendPassive      `json:"appendPassive"`
     AscensionMaterials map[string]materials `json:"ascensionMaterials"`
     SkillMaterials     map[string]materials `json:"skillMaterials"`
@@ -35,7 +36,7 @@ type characterImages struct {
 }
 
 type appendPassive struct {
-    // Skill model.Skill `json:"skill"`
+    Skill model.Skill `json:"skill"`
 }
 
 type materials struct {
@@ -54,7 +55,7 @@ type itemDetails struct {
     Icon string `json:"icon"`
 }
 
-func SearchServant(c echo.Context) error {
+func SearchDisplay(c echo.Context) error {
 	query := c.QueryParam("query")
 	uri := fmt.Sprintf(constant.AtlasAcademySearch, query)
 
@@ -96,6 +97,85 @@ func SearchServant(c echo.Context) error {
 	return c.Render(http.StatusOK, "search_results", res)
 }
 
+func ServantDisplay(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.Logger().Fatal(err)
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	uri := fmt.Sprintf(constant.AtlasAcademyServantInfo, id)
+
+	resp, err := http.Get(uri)
+	if err != nil {
+		c.Logger().Fatal(err)
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.Logger().Fatal(err)
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+    var s servantResponse
+    err = json.Unmarshal(body, &s)
+    if err != nil {
+        c.Logger().Fatal(err)
+        return c.String(http.StatusInternalServerError, err.Error())
+    }
+
+    portraits := make([]string, 0, len(s.ExtraAssets.CharacterGraph.Ascension))
+    keys := make([]string, 0, len(s.ExtraAssets.CharacterGraph.Ascension))
+    for k := range s.ExtraAssets.CharacterGraph.Ascension {
+        keys = append(keys, k)
+    }
+    sort.Strings(keys)
+    for _, v := range keys {
+        portraits = append(portraits, s.ExtraAssets.CharacterGraph.Ascension[v])
+    }
+
+    skills := make([]model.Skill, 0, len(s.Skills))
+    for _, v := range s.Skills {
+        skills = append(skills, model.Skill{
+            Name: v.Name,
+            Icon: v.Icon,
+        })
+    }
+
+    appends := make([]model.Skill, 0, len(s.Appends))
+    for _, v := range s.Appends {
+        appends = append(appends, model.Skill{
+            Name: v.Skill.Name,
+            Icon: v.Skill.Icon,
+        })
+    }
+
+    ascensionMaterials := processMaterialList(s.AscensionMaterials)
+    skillMaterials := processMaterialList(s.SkillMaterials)
+    appendMaterials := processMaterialList(s.AppendMaterials)
+
+    servant := model.Servant{
+        ID:                 s.ID,
+        Name:               s.Name,
+        ClassIcon:          fmt.Sprintf(constant.AtlasAcademyClassIcon, classIconFilename(s.Rarity, s.ClassID)),
+        Icon:               s.ExtraAssets.Faces.Ascension["1"],
+        Portraits:          portraits,
+        Skills:             skills,
+        Appends:            appends,
+        AscensionMaterials: ascensionMaterials,
+        SkillMaterials:     skillMaterials,
+        AppendMaterials:    appendMaterials,
+    }
+
+	res := map[string]interface{}{
+		"Servant": servant,
+	}
+
+	return c.Render(http.StatusOK, "servant_display", res)
+}
+
 func classIconFilename(r int, cid int) string {
 	if r == 3 || r == 2 {
 		r--
@@ -104,4 +184,37 @@ func classIconFilename(r int, cid int) string {
 	}
 
     return fmt.Sprintf("%d_%d", r, cid)
+}
+
+func getMaterialKeysSorted(s map[string]materials) []string {
+    keys := make([]string, 0, len(s))
+    for k := range s {
+        keys = append(keys, k)
+    }
+    sort.Strings(keys)
+
+    return keys
+}
+
+func processMaterialList(ml map[string]materials) []model.MaterialList {
+    m := make([]model.MaterialList, 0, len(ml))
+    keys := getMaterialKeysSorted(ml)
+    for _, v := range keys {
+        items := make([]model.Material, 0, len(ml[v].Items))
+        for _, i := range ml[v].Items {
+            items = append(items, model.Material{
+                ID:     i.Details.ID,
+                Name:   i.Details.Name,
+                Icon:   i.Details.Icon,
+                Amount: i.Amount,
+            })
+        }
+
+        m = append(m, model.MaterialList{
+            Materials: items,
+            QP:        ml[v].QP,
+        })
+    }
+
+    return m
 }

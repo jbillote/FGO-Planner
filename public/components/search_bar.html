@@ -1,7 +1,7 @@
 {{define "search_bar"}}
 <div class="d-flex justify-content-center px-5 z-1">
     <div class="form-outline" data-mdb-input-init>
-        <input type="search" name="query" class="form-control"
+        <input type="search" name="query" class="form-control" id="search"
             hx-get="/search"
             hx-trigger="input changed delay:500ms, search"
             hx-target="#search-results"

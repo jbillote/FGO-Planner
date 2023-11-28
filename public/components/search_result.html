@@ -1,5 +1,11 @@
 {{define "search_result"}}
-<a href="#" class="list-group-item list-group-item-action px-3 border-0">
+<a
+    href=""
+    class="list-group-item list-group-item-action px-3 border-0"
+    hx-get="/servant/{{.ID}}"
+    hx-target="#servant-display"
+    hx-swap="innerHTML"
+>
     <div class="d-flex align-items-center">
         <img src="{{.Icon}}" style="width: 45px; height: 45px;" class="rounded-circle" />
         <div class="ms-3">
