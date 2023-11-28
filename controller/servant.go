@@ -55,7 +55,7 @@ type itemDetails struct {
     Icon string `json:"icon"`
 }
 
-func SearchDisplay(c echo.Context) error {
+func SearchServant(c echo.Context) error {
 	query := c.QueryParam("query")
 	uri := fmt.Sprintf(constant.AtlasAcademySearch, query)
 
@@ -91,13 +91,10 @@ func SearchDisplay(c echo.Context) error {
 		})
 	}
 
-	res := map[string]interface{}{
-		"Results": servants,
-	}
-	return c.Render(http.StatusOK, "search_results", res)
+	return c.JSON(http.StatusOK, servants)
 }
 
-func ServantDisplay(c echo.Context) error {
+func GetServant(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.Logger().Fatal(err)
@@ -169,11 +166,7 @@ func ServantDisplay(c echo.Context) error {
         AppendMaterials:    appendMaterials,
     }
 
-	res := map[string]interface{}{
-		"Servant": servant,
-	}
-
-	return c.Render(http.StatusOK, "servant_display", res)
+	return c.JSON(http.StatusOK, servant)
 }
 
 func classIconFilename(r int, cid int) string {

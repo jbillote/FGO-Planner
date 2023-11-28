@@ -31,15 +31,17 @@ func (s *FGOPlannerAPI) Start(port string) {
 		Browse: false,
 	}))
 
-    web := s.e.Group("")
-    webRoutes(web)
+	fgo := s.e.Group("/api/fgo")
+	v1 := fgo.Group("/v1")
+	v1Routes(v1)
 
     s.e.Logger.Fatal(s.e.Start(":8080"))
 }
 
-func webRoutes(e *echo.Group) {
-    e.GET("/servant/:id", controller.ServantDisplay)
-    e.GET("/search", controller.SearchDisplay)
+func v1Routes(e *echo.Group) {
+	servantGroup := e.Group("/servant")
+	servantGroup.GET("", controller.SearchServant)
+	servantGroup.GET("/:id", controller.GetServant)
 }
 
 func (s *FGOPlannerAPI) Close() {
