@@ -1,1 +1,1 @@
-web: fgo-planner-fullstack
+web: fgo-planner
