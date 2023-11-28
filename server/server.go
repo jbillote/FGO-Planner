@@ -7,27 +7,27 @@ import (
 )
 
 type FGOPlannerAPI struct {
-    e *echo.Echo
+	e *echo.Echo
 }
 
 func NewServer() *FGOPlannerAPI {
-    return &FGOPlannerAPI{
-        e: echo.New(),
-    }
+	return &FGOPlannerAPI{
+		e: echo.New(),
+	}
 }
 
 func (s *FGOPlannerAPI) Start(port string) {
-    s.e.Use(middleware.RemoveTrailingSlash())
-    s.e.Use(middleware.Logger())
-    s.e.Use(middleware.Recover())
-    s.e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-        // AllowOrigins: []string{ "*" },
-        AllowMethods: []string{echo.GET},
-    }))
+	s.e.Use(middleware.RemoveTrailingSlash())
+	s.e.Use(middleware.Logger())
+	s.e.Use(middleware.Recover())
+	s.e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		// AllowOrigins: []string{ "*" },
+		AllowMethods: []string{echo.GET},
+	}))
 	s.e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
-		Root: "build",
-		Index: "index.html",
-		HTML5: true,
+		Root:   "build",
+		Index:  "index.html",
+		HTML5:  true,
 		Browse: false,
 	}))
 
@@ -35,7 +35,7 @@ func (s *FGOPlannerAPI) Start(port string) {
 	v1 := fgo.Group("/v1")
 	v1Routes(v1)
 
-    s.e.Logger.Fatal(s.e.Start(port))
+	s.e.Logger.Fatal(s.e.Start(port))
 }
 
 func v1Routes(e *echo.Group) {
@@ -45,5 +45,5 @@ func v1Routes(e *echo.Group) {
 }
 
 func (s *FGOPlannerAPI) Close() {
-    s.e.Close()
+	s.e.Close()
 }
