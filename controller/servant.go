@@ -3,8 +3,8 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jbillote/fgo-planner-fullstack/model"
-	"github.com/jbillote/fgo-planner-fullstack/constant"
+	"github.com/jbillote/fgo-planner/model"
+	"github.com/jbillote/fgo-planner/constant"
 	"github.com/labstack/echo/v4"
 	"io"
 	"math"

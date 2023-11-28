@@ -1,4 +1,4 @@
-module github.com/jbillote/fgo-planner-fullstack
+module github.com/jbillote/fgo-planner
 
 go 1.21.4
 

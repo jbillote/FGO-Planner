@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/jbillote/fgo-planner-fullstack/controller"
+	"github.com/jbillote/fgo-planner/controller"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
