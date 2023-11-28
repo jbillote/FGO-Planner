@@ -1,8 +1,13 @@
 package main
 
-import "github.com/jbillote/fgo-planner-fullstack/server"
+import (
+	"fmt"
+	"github.com/jbillote/fgo-planner-fullstack/server"
+	"os"
+)
 
 func main() {
 	s := server.NewServer()
-	s.Start("8080")
+	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
+	s.Start(port)
 }
