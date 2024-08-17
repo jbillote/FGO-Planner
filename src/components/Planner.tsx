@@ -29,6 +29,10 @@ function Planner({loading, init, servant}: PlannerProps) {
     const [append2End, setAppend2End] = useState(1)
     const [append3Start, setAppend3Start] = useState(1)
     const [append3End, setAppend3End] = useState(1)
+    const [append4Start, setAppend4Start] = useState(1)
+    const [append4End, setAppend4End] = useState(1)
+    const [append5Start, setAppend5Start] = useState(1)
+    const [append5End, setAppend5End] = useState(1)
 
     const [materials, setMaterials] = useState([] as Material[])
 
@@ -161,6 +165,42 @@ function Planner({loading, init, servant}: PlannerProps) {
             }
         }
 
+        for (let i = append4Start - 1; i < append4End - 1; i++) {
+            sum += servant.appendMaterials[i].qp
+
+            for (let j = 0; j < servant.appendMaterials[i].materials.length; j++) {
+                let ndx = mats.findIndex(
+                    value => {
+                        return value.id === servant.appendMaterials[i].materials[j].id
+                    }
+                )
+
+                if (ndx < 0) {
+                    mats.push({...servant.appendMaterials[i].materials[j]})
+                } else {
+                    mats[ndx].amount += servant.appendMaterials[i].materials[j].amount
+                }
+            }
+        }
+
+        for (let i = append5Start - 1; i < append5End - 1; i++) {
+            sum += servant.appendMaterials[i].qp
+
+            for (let j = 0; j < servant.appendMaterials[i].materials.length; j++) {
+                let ndx = mats.findIndex(
+                    value => {
+                        return value.id === servant.appendMaterials[i].materials[j].id
+                    }
+                )
+
+                if (ndx < 0) {
+                    mats.push({...servant.appendMaterials[i].materials[j]})
+                } else {
+                    mats[ndx].amount += servant.appendMaterials[i].materials[j].amount
+                }
+            }
+        }
+
         if (sum > 0) {
             mats.unshift({
                 id: -1,
@@ -171,7 +211,8 @@ function Planner({loading, init, servant}: PlannerProps) {
 
         setMaterials(mats)
     }, [ascStart, ascEnd, skill1Start, skill1End, skill2Start, skill2End, skill3Start, skill3End, append1Start,
-        append1End, append2Start, append2End, append3Start, append3End, servant.ascensionMaterials,
+        append1End, append2Start, append2End, append3Start, append3End, append4Start, append4End, append5Start,
+        append5End, servant.ascensionMaterials,
         servant.skillMaterials, servant.appendMaterials])
 
 
@@ -281,6 +322,32 @@ function Planner({loading, init, servant}: PlannerProps) {
         let max = Math.max(append3Start, e.target.valueAsNumber)
         e.target.valueAsNumber = max
         setAppend3End(max)
+    }
+
+    function onAppend4MinChange(e: React.ChangeEvent<HTMLInputElement>) {
+        if (e.target.valueAsNumber > append4End) {
+            setAppend4End(e.target.valueAsNumber)
+        }
+        setAppend4Start(e.target.valueAsNumber)
+    }
+
+    function onAppend4MaxChange(e: React.ChangeEvent<HTMLInputElement>) {
+        let max = Math.max(append4Start, e.target.valueAsNumber)
+        e.target.valueAsNumber = max
+        setAppend4End(max)
+    }
+
+    function onAppend5MinChange(e: React.ChangeEvent<HTMLInputElement>) {
+        if (e.target.valueAsNumber > append5End) {
+            setAppend5End(e.target.valueAsNumber)
+        }
+        setAppend5Start(e.target.valueAsNumber)
+    }
+
+    function onAppend5MaxChange(e: React.ChangeEvent<HTMLInputElement>) {
+        let max = Math.max(append5Start, e.target.valueAsNumber)
+        e.target.valueAsNumber = max
+        setAppend5End(max)
     }
 
     if (init) {
@@ -433,6 +500,44 @@ function Planner({loading, init, servant}: PlannerProps) {
                                     </MDBCol>
                                     <MDBCol md='6'>
                                         <MDBRange defaultValue={1} min={1} max={10} value={append3End} onChange={onAppend3MaxChange} id='append33End' label='End' />
+                                    </MDBCol>
+                                </MDBRow>
+                                <MDBRow className='py-2'>
+                                    <MDBRow>
+                                        <MDBCol md='2'>
+                                            <img src={servant.appends[3].icon} style={{width:'30px'}} />
+                                        </MDBCol>
+                                        <MDBCol md='10'>
+                                            <span className='text-white'>{servant.appends[3].name}</span>
+                                        </MDBCol>
+                                    </MDBRow>
+                                    <MDBRow>
+                                        <span className='text-white'>From {append4Start} to {append4End}</span>
+                                    </MDBRow>
+                                    <MDBCol md='6'>
+                                        <MDBRange defaultValue={1} min={1} max={10} onChange={onAppend4MinChange} id='append4Start' label='Start' />
+                                    </MDBCol>
+                                    <MDBCol md='6'>
+                                        <MDBRange defaultValue={1} min={1} max={10} value={append4End} onChange={onAppend4MaxChange} id='append4End' label='End' />
+                                    </MDBCol>
+                                </MDBRow>
+                                <MDBRow className='py-2'>
+                                    <MDBRow>
+                                        <MDBCol md='2'>
+                                            <img src={servant.appends[4].icon} style={{width:'30px'}} />
+                                        </MDBCol>
+                                        <MDBCol md='10'>
+                                            <span className='text-white'>{servant.appends[4].name}</span>
+                                        </MDBCol>
+                                    </MDBRow>
+                                    <MDBRow>
+                                        <span className='text-white'>From {append5Start} to {append5End}</span>
+                                    </MDBRow>
+                                    <MDBCol md='6'>
+                                        <MDBRange defaultValue={1} min={1} max={10} onChange={onAppend5MinChange} id='append5Start' label='Start' />
+                                    </MDBCol>
+                                    <MDBCol md='6'>
+                                        <MDBRange defaultValue={1} min={1} max={10} value={append5End} onChange={onAppend5MaxChange} id='append5End' label='End' />
                                     </MDBCol>
                                 </MDBRow>
                             </MDBCol>
